@@ -1,0 +1,5 @@
+.idea
+pyspam.egg-info
+dist
+tests
+__pycache__
