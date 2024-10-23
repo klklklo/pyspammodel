@@ -14,13 +14,12 @@ class AeroSpam:
                                         np.array(self._bands_dataset['P2'], dtype=np.float64),
                                         np.array(self._bands_dataset['P3'], dtype=np.float64))).transpose()
 
-        self._lines_coeffs = np.vstack((np.array(self._bands_dataset['P1'], dtype=np.float64),
-                                        np.array(self._bands_dataset['P2'], dtype=np.float64),
-                                        np.array(self._bands_dataset['P3'], dtype=np.float64))).transpose()
+        self._lines_coeffs = np.vstack((np.array(self._lines_dataset['P1'], dtype=np.float64),
+                                        np.array(self._lines_dataset['P2'], dtype=np.float64),
+                                        np.array(self._lines_dataset['P3'], dtype=np.float64))).transpose()
 
     def _get_f107(self, f107):
         '''
-
 
         :param f107: single value of the daily index F10.7 or an array of such values
         :return:
@@ -36,13 +35,14 @@ class AeroSpam:
         Model calculation method. Returns the values of radiation fluxes in all lines
         of the spectrum of the interval 10-105 nm
         :param f107: single value of the daily index F10.7 or an array of such values
-        :return: xarray Dataset [euv_flux_spectra]
+        :return: xarray Dataset [euv_flux_spectra, line_lambda]
         '''
         x = self._get_f107(f107)
-        res = np.dot(self._lines_coeffs, x.T) * 1.e15
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('line', 'f107'), res)},
-                          coords={'lambda': self._lines_dataset['lambda'].values,
-                                  'f107': x[:, 0],
+        res = np.dot(self._lines_coeffs, x.T)
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('line_number', 'f107'), res),
+                                     'line_lambda': ('line_number', self._lines_dataset['lambda'].values)},
+                          coords={'line_number': np.arange(17),
+                                  'f107': x[:, 1],
                                   })
 
     def get_spectral_bands(self, f107):
@@ -53,13 +53,13 @@ class AeroSpam:
         :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
         '''
         x = self._get_f107(f107)
-        res = np.dot(self._bands_coeffs, x.T) * 1.e15
+        res = np.dot(self._bands_coeffs, x.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'f107'), res),
                                      'lband': ('band_number', self._bands_dataset['lband'].values),
                                      'uband': ('band_number', self._bands_dataset['uband'].values),
                                      'center': ('band_number', self._bands_dataset['center'].values)},
                           coords={'band_center': self._bands_dataset['center'].values,
-                                  'f107': x[:, 0],
+                                  'f107': x[:, 1],
                                   'band_number': np.arange(20)})
 
     def get_spectra(self, lac):
