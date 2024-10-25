@@ -5,63 +5,61 @@ import pyspam._misc as _m
 
 class SolarSpam:
     '''
-    Пипипупу
+    Solar-SPAM model class.
     '''
     def __init__(self):
-        self._bands_dataset, self._lines_dataset = _m.get_nusinov_euvt_coeffs()
-        self._bands_coeffs = np.vstack((np.array(self._bands_dataset['B0'], dtype=np.float64),
-                                        np.array(self._bands_dataset['B1'], dtype=np.float64))).transpose()
-        self._lines_coeffs = np.vstack((np.array(self._lines_dataset['B0'], dtype=np.float64),
-                                        np.array(self._lines_dataset['B1'], dtype=np.float64))).transpose()
+        self._dataset = _m.get_solar_spam_coeffs()
+        self._coeffs = np.vstack((np.array(self._dataset['P1'], dtype=np.float64),
+                                  np.array(self._dataset['P2'], dtype=np.float64),
+                                  np.array(self._dataset['P3'], dtype=np.float64))).transpose()
 
-    def _get_nlam(self, lac):
+    def _get_f107(self, f107):
         '''
-        A method for preparing data. It creates a two-dimensional array, the first column of which is filled with ones,
-        the second with the values of the fluxes in the Lyman-alpha line
-        :param lac: single value or list of flux values
-        :return: numpy-array for model calculation
+        Method for creating the daily F10.7 index matrix that will be used to calculate the spectrum.
+        Returns a matrix with rows [F10.7 ^ 2; F10.7; 1] for each passed value F10.7.
+        :param f107: single value of the daily index F10.7 or an array of such values.
+        :return: numpy array for model calculation.
         '''
-        if isinstance(lac, float):
-            return np.array([lac, lac ** 2], dtype=np.float64)[None, :]
-        tmp = np.array(lac, dtype=np.float64)[:, None]
-        tmp1 = np.array([x ** 2 for x in tmp], dtype=np.float64)
-        return np.hstack([tmp, tmp1])
+        if isinstance(f107, float):
+            return np.array([f107 ** 2, f107, 1], dtype=np.float64)[None, :]
+        return np.vstack([np.array([x ** 2, x, 1]) for x in f107], dtype=np.float64)
 
-    def get_spectral_lines(self, lac):
-        '''
-        Model calculation method. Returns the values of radiation fluxes in all lines
-        of the spectrum of the interval 10-105 nm
-        :param lac: single value or list of flux values
-        :return: xarray Dataset [euv_flux_spectra]
-        '''
-        nlam = self._get_nlam(lac)
-        res = np.dot(self._lines_coeffs, nlam.T) * 1.e15
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('line', 'lac'), res)},
-                          coords={'line': self._lines_dataset['line'].values,
-                                  'lac': nlam[:, 0],
-                                  })
+    # def get_spectral_bands(self, f107):
+    #     '''
+    #     Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
+    #     of the spectrum of the interval 10-105 nm
+    #     :param f107: single value of the daily index F10.7 or an array of such values
+    #     :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
+    #     '''
+    #     F107 = self._get_f107(f107)
+    #     res = np.dot(self._coeffs, F107.T)
+    #     return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'f107'), res),
+    #                                  'lband': ('band_number', self._dataset['lband'].values),
+    #                                  'uband': ('band_number', self._dataset['uband'].values),
+    #                                  'center': ('band_number', self._dataset['center'].values)},
+    #                       coords={'band_center': self._dataset['center'].values,
+    #                               'f107': F107[:, 0],
+    #                               'band_number': np.arange(20)})
 
-    def get_spectral_bands(self, lac):
+    def get_spectral_bands(self, f107):
         '''
         Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
         of the spectrum of the interval 10-105 nm
-        :param lac: single value or list of flux values
+        :param f107: single value of the daily index F10.7 or an array of such values
         :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
         '''
-        nlam = self._get_nlam(lac)
-        res = np.dot(self._bands_coeffs, nlam.T) * 1.e15
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
-                                     'lband': ('band_number', self._bands_dataset['start'].values),
-                                     'uband': ('band_number', self._bands_dataset['stop'].values),
-                                     'center': ('band_number', self._bands_dataset['center'].values)},
-                          coords={'band_center': self._bands_dataset['center'].values,
-                                  'lac': nlam[:, 0],
-                                  'band_number': np.arange(20)})
+        F107 = self._get_f107(f107)
+        res = np.dot(self._coeffs, F107.T)
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'f107'), res),
+                                     'line_lambda': ('band_number', self._dataset['lambda'].values)},
+                          coords={'band_center': self._dataset['lambda'].values,
+                                  'f107': F107[:, 0],
+                                  'band_number': np.arange(189)})
 
-    def get_spectra(self, lac):
+    def get_spectra(self, f107):
         '''
         Model calculation method. Combines the get_spectra_lines() and get_spectral_bands() methods
-        :param lac: single value or list of flux values
-        :return: xarray Dataset [euv_flux_spectra], xarray Dataset [euv_flux_spectra, lband, uband, center]
+        :param f107: single value of the daily index F10.7 or an array of such values.
+        :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
         '''
-        return self.get_spectral_bands(lac), self.get_spectral_lines(lac)
+        return self.get_spectral_bands(f107)
