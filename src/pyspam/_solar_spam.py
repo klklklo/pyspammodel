@@ -54,7 +54,7 @@ class SolarSpam:
                                      'line_lambda': ('band_number', self._dataset['lambda'].values)},
                           coords={'band_center': self._dataset['lambda'].values,
                                   'f107': F107[:, 0],
-                                  'band_number': np.arange(189)})
+                                  'band_number': np.arange(190)})
 
     def get_spectra(self, f107):
         '''

@@ -38,9 +38,10 @@ class AeroSpam:
         '''
         F107 = self._get_f107(f107)
         res = np.dot(self._lines_coeffs, F107.T)
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('line_number', 'F107'), res),
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('lambda', 'F107'), res),
                                      'line_lambda': ('line_number', self._lines_dataset['lambda'].values)},
                           coords={'line_number': np.arange(17),
+                                  'lambda': self._lines_dataset['lambda'].values,
                                   'F107': F107[:, 1],
                                   })
 
