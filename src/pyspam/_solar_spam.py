@@ -20,26 +20,12 @@ class SolarSpam:
         :param f107: single value of the daily index F10.7 or an array of such values.
         :return: numpy array for model calculation.
         '''
-        if isinstance(f107, float):
-            return np.array([f107 ** 2, f107, 1], dtype=np.float64)[None, :]
-        return np.vstack([np.array([x ** 2, x, 1]) for x in f107], dtype=np.float64)
-
-    # def get_spectral_bands(self, f107):
-    #     '''
-    #     Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
-    #     of the spectrum of the interval 10-105 nm
-    #     :param f107: single value of the daily index F10.7 or an array of such values
-    #     :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
-    #     '''
-    #     F107 = self._get_f107(f107)
-    #     res = np.dot(self._coeffs, F107.T)
-    #     return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'f107'), res),
-    #                                  'lband': ('band_number', self._dataset['lband'].values),
-    #                                  'uband': ('band_number', self._dataset['uband'].values),
-    #                                  'center': ('band_number', self._dataset['center'].values)},
-    #                       coords={'band_center': self._dataset['center'].values,
-    #                               'f107': F107[:, 0],
-    #                               'band_number': np.arange(20)})
+        try:
+            if isinstance(f107, float) or isinstance(f107, int):
+                return np.array([f107 ** 2, f107, 1], dtype=np.float64).reshape(1, 3)
+            return np.vstack([np.array([x ** 2, x, 1]) for x in f107], dtype=np.float64)
+        except TypeError:
+            raise TypeError('Only int, float or array-like object types are allowed')
 
     def get_spectral_bands(self, f107):
         '''
@@ -48,12 +34,12 @@ class SolarSpam:
         :param f107: single value of the daily index F10.7 or an array of such values
         :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
         '''
-        F107 = self._get_f107(f107)
-        res = np.dot(self._coeffs, F107.T)
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'f107'), res),
+        f107 = self._get_f107(f107)
+        res = np.dot(self._coeffs, f107.T)
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
                                      'line_lambda': ('band_number', self._dataset['lambda'].values)},
                           coords={'band_center': self._dataset['lambda'].values,
-                                  'f107': F107[:, 0],
+                                  'F107': f107[:, 1],
                                   'band_number': np.arange(190)})
 
     def get_spectra(self, f107):

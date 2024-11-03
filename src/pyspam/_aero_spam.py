@@ -1,7 +1,6 @@
 import numpy as np
 import xarray as xr
 import pyspam._misc as _m
-import math
 
 
 class AeroSpam:
@@ -26,9 +25,12 @@ class AeroSpam:
         :return: numpy array for model calculation.
         '''
 
-        if isinstance(f107, float):
-            return np.array([f107 ** 2, f107, 1], dtype=np.float64)[None, :]
-        return np.vstack([np.array([x ** 2, x, 1]) for x in f107], dtype=np.float64)
+        try:
+            if isinstance(f107, float) or isinstance(f107, int):
+                return np.array([f107 ** 2, f107, 1], dtype=np.float64).reshape(1, 3)
+            return np.vstack([np.array([x ** 2, x, 1]) for x in f107], dtype=np.float64)
+        except TypeError:
+            raise TypeError('Only int, float or array-like object types are allowed')
 
     def get_spectral_lines(self, f107):
         '''
