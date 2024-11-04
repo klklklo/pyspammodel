@@ -44,12 +44,11 @@ class AeroSpam:
                                      'line_lambda': ('line_number', self._lines_dataset['lambda'].values)},
                           coords={'line_number': np.arange(17),
                                   'lambda': self._lines_dataset['lambda'].values,
-                                  'F107': F107[:, 1],
-                                  })
+                                  'F107': F107[:, 1]})
 
     def get_spectral_bands(self, f107):
         '''
-        A method for calculating the spectrum for 20 wave bands  with a length of 5 nm from the range of 5-105 nm.
+        A method for calculating the spectrum for 20 wave bands with a length of 5 nm from the range of 5-105 nm.
         :param f107: single value of the daily index F10.7 or an array of such values.
         :return: xarray Dataset [euv_flux_spectra, lband, uband, center].
         '''

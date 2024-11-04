@@ -30,9 +30,9 @@ class SolarSpam:
     def get_spectral_bands(self, f107):
         '''
         Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
-        of the spectrum of the interval 10-105 nm
+        of the spectrum of the interval 0-190 nm
         :param f107: single value of the daily index F10.7 or an array of such values
-        :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
+        :return: xarray Dataset [euv_flux_spectra, line_lambda]
         '''
         f107 = self._get_f107(f107)
         res = np.dot(self._coeffs, f107.T)
@@ -44,8 +44,8 @@ class SolarSpam:
 
     def get_spectra(self, f107):
         '''
-        Model calculation method. Combines the get_spectra_lines() and get_spectral_bands() methods
+        Model calculation method. Used to unify the interface with AeroSpam class.
         :param f107: single value of the daily index F10.7 or an array of such values.
-        :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
+        :return: xarray Dataset [euv_flux_spectra, line_lambda]
         '''
         return self.get_spectral_bands(f107)
