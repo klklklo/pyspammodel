@@ -1,6 +1,6 @@
 import numpy as np
 import xarray as xr
-import pyspam._misc as _m
+import pyspammodel._misc as _m
 
 
 class AeroSpam:

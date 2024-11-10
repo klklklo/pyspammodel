@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pyspam"
-version = "0.0.1b"
+name = "pyspammodel"
+version = "0.0.2b1"
 authors = [
   { name="Anton Tatarnikov", email="tatarnikoffanton@yandex.ru" },
   { name="Oleg Zolotov", email="ovz.office@gmail.com" },
@@ -38,10 +38,10 @@ dependencies=[
 ]
 
 [project.urls]
-Homepage = "https://github.com/klklklo/pyspam"
+Homepage = "https://github.com/klklklo/pyspammodel"
 
 [tool.setuptools]
 include-package-data=true
 
 [tool.setuptools.package-data]
-"pynusinov._coeffs" = [ "*.nc"]
+"pyspammodel._coeffs" = [ "*.nc"]

@@ -1,15 +1,15 @@
-# pyspam
+# pyspammodel
 <!--Basic information-->
-pyspam is a Python3 implementation of models of the X-ray, extreme and far ultraviolet radiation spectra of the Sun described by A.A. Nusinov. 
+pyspammodel is a Python3 implementation of models of the X-ray, extreme and far ultraviolet radiation spectra of the Sun described by A.A. Nusinov. 
 The EUV model describes variations in the 5–105 nm spectral region, which are responsible for the ionization of the main components of the earth’s atmosphere.
 The FUV model describes the flux changes in the 115–242 nm region, which determines heating of the upper atmosphere and the dissociation of molecular oxygen.
 The input parameter for both models is the intensity of the photon flux in the Lyman-alpha line, which has been measured for decades. 
 Using this parameter allows you to calculate solar radiation fluxes for any period of time.
 
-If you use pyspam or SPAM model directly or indirectly, please, cite in your research the following paper:
+If you use pyspammodel or SPAM model directly or indirectly, please, cite in your research the following paper:
 
-1.  Nikolaeva, V.; Gordeev, E.  SPAM: Solar Spectrum Prediction for Applications and Modeling. Atmosphere 2023, 14, 226. 
-https:// doi.org/10.3390/atmos14020226
+1.  Nikolaeva, V.; Gordeev, E.  SPAM: Solar Spectrum Prediction for Applications and Modeling. Atmosphere 2023, 14, 226.
+https://doi.org/10.3390/atmos14020226
 
 ## User's guide
 
@@ -20,10 +20,10 @@ https:// doi.org/10.3390/atmos14020226
 The following command is used to install the package:
 
 ```
-python -m pip install pyspam
+python -m pip install pyspammodel
 ```
 
-pyspam is the name of the package.
+pyspammodel is the name of the package.
 
 The package contains two classes: SolarSpam and AeroSpam.
 
@@ -53,7 +53,7 @@ Data variables:
 
 ### SolarSpam usage example
 
-- import the pyspam package;
+- import the pyspammodel package;
 - create an instance of the SolarSpam class;
 - perform calculations with the created instance.
 
@@ -65,7 +65,7 @@ This class contains two methods for calculating the spectrum:
 1. get_spectral_bands()
 ```
 # importing a package with the alias spam
-import pyspam as spam
+import pyspammodel as spam
 # creating an instance of the SolarSpam class
 example = spam.SolarSpam()
 # calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectral_bands()
@@ -106,7 +106,7 @@ Coordinates:
 ```
 
 2. get_spectra()
-This method is used to unify the use of the pyspam package classes. get_spectra() internally calls the 
+This method is used to unify the use of the pyspammodel package classes. get_spectra() internally calls the 
 get_spectral_bands() method with the parameters passed to get_spectra().
 
 
@@ -166,7 +166,7 @@ Below is an example of working with the AeroSpam class:
 1. get_spectral_bands()
 ```
 # importing a package with the alias spam
-import pyspam as spam
+import pyspammodel as spam
 # creating an instance of the AeroSpam class
 example = spam.AeroSpam()
 # calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectral_bands()
@@ -209,7 +209,7 @@ Coordinates:
 2. get_spectral_lines()
 ```
 # importing a package with the alias p
-import pyspam as p
+import pyspammodel as p
 # creating an instance of the AeroSpam class
 example = spam.AeroSpam()
 # calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectral_lines()
@@ -251,7 +251,7 @@ Coordinates:
 
 3. get_spectra()
 
-This method is used to unify the use of the pyspam package classes. get_spectra() internally calls the 
+This method is used to unify the use of the pyspammodel package classes. get_spectra() internally calls the 
 get_spectral_bands() and get_spectral_lines() method with the parameters passed to get_spectra(). The method returns 
 a tuple of two datasets, the first element is a dataset from the get_spectral_bands() method, 
 the second is a dataset from the get_spectral_lines() method. get_spectra() can accept either one or 
@@ -259,7 +259,7 @@ several values of F10.7.
 
 ```
 # importing a package with the alias p
-import pyspam as p
+import pyspammodel as p
 # creating an instance of the AeroSpam class
 example = spam.AeroSpam()
 # calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectra()
