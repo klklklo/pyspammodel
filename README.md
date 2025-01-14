@@ -1,10 +1,14 @@
 # pyspammodel
 <!--Basic information-->
-pyspammodel is a Python3 implementation of models of the X-ray, extreme and far ultraviolet radiation spectra of the Sun described by A.A. Nusinov. 
-The EUV model describes variations in the 5–105 nm spectral region, which are responsible for the ionization of the main components of the earth’s atmosphere.
-The FUV model describes the flux changes in the 115–242 nm region, which determines heating of the upper atmosphere and the dissociation of molecular oxygen.
-The input parameter for both models is the intensity of the photon flux in the Lyman-alpha line, which has been measured for decades. 
-Using this parameter allows you to calculate solar radiation fluxes for any period of time.
+pyspammodel is a Python3 implementation of models of the X-ray, extreme and far ultraviolet radiation spectra of the Sun 
+described by V.D. Nikolaeva. Solar-SPAM is an independent sub-model of the SPAM model and is intended for a wide range 
+of uses. This model calculates the spectrum of extreme ultraviolet radiation in the wavelength range of 0-190 nm in 
+intervals with a step of 1 nm.
+Aero-SPAM is an independent sub-model of the SPAM model and is designed for astronomical calculations. This model 
+calculates the spectrum of extreme ultraviolet radiation in the wavelength range of 5-105 nm. The spectrum 
+is calculated for 20 intervals with a width of 5 nm and 17 separate lines (including the line Ly-alpha with 
+λ = 121.6). The input parameter for both models is daily index F<sub>10.7</sub> (in s.f.u.). Using this parameter allows you 
+to calculate solar radiation fluxes for any period of time.
 
 If you use pyspammodel or SPAM model directly or indirectly, please, cite in your research the following paper:
 
@@ -33,7 +37,7 @@ This class is a implementation of the Solar-SPAM model of the photon energy flux
 0-190 nm in spectral bands of 1 nm each.
 
 Input parameters:
-- single value of the daily index F10.7 (in s.f.u.). You can set one or more F10.7 values.
+- single value of the daily index F<sub>10.7</sub> (in s.f.u.). You can set one or more F<sub>10.7</sub> values.
 Use a list to pass multiple values.
 
 Output parameters:
@@ -85,7 +89,7 @@ Coordinates:
   * F107         (F107) float64 8B 155.0
 ```
 
-If you need to calculate the spectrum for several F10.7 values, pass them using a list:
+If you need to calculate the spectrum for several F<sub>10.7</sub> values, pass them using a list:
 
 ```
 # calculate the spectrum values at F10.7 = 155 s.f.u. and F10.7 = 200 s.f.u. using get_spectral_bands()
@@ -117,7 +121,7 @@ and provides a photon flux for 37 specific wavelength intervals (20 wave bands a
 within the range of 5–105 nm, and an additional 121.5 nm Lyman-alpha line).
 
 Input parameters:
-- single value of the daily index F10.7 (in s.f.u.). You can set one or more F10.7 values.
+- single value of the daily index F<sub>10.7</sub> (in s.f.u.). You can set one or more F<sub>10.7</sub> values.
 Use a list to pass multiple values.
 
 Output parameters:
@@ -186,7 +190,7 @@ Coordinates:
   * F107         (F107) float64 8B 155.0
 ```
 
-If you need to calculate the spectrum for several F10.7 values, pass them using a list:
+If you need to calculate the spectrum for several F<sub>10.7</sub> values, pass them using a list:
 
 ```
 # calculate the spectrum values at F10.7 = 155 s.f.u. and F10.7 = 200 s.f.u. using get_spectral_bands()
@@ -255,7 +259,7 @@ This method is used to unify the use of the pyspammodel package classes. get_spe
 get_spectral_bands() and get_spectral_lines() method with the parameters passed to get_spectra(). The method returns 
 a tuple of two datasets, the first element is a dataset from the get_spectral_bands() method, 
 the second is a dataset from the get_spectral_lines() method. get_spectra() can accept either one or 
-several values of F10.7.
+several values of F<sub>10.7</sub>.
 
 ```
 # importing a package with the alias p
