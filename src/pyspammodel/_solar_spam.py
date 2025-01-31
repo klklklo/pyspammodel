@@ -27,6 +27,9 @@ class SolarSpam:
         except TypeError:
             raise TypeError('Only int, float or array-like object types are allowed')
 
+    def _predict(self, matrix_a, vector_x):
+        return np.dot(matrix_a, vector_x)
+
     def get_spectral_bands(self, f107):
         '''
         Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
@@ -35,7 +38,7 @@ class SolarSpam:
         :return: xarray Dataset [euv_flux_spectra, line_lambda]
         '''
         f107 = self._get_f107(f107)
-        res = np.dot(self._coeffs, f107.T)
+        res = self._predict(self._coeffs, f107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
                                      'line_lambda': ('band_number', self._dataset['lambda'].values)},
                           coords={'band_center': self._dataset['lambda'].values,

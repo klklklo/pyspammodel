@@ -72,7 +72,7 @@ This class contains two methods for calculating the spectrum:
 import pyspammodel as spam
 # creating an instance of the SolarSpam class
 example = spam.SolarSpam()
-# calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectral_bands()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. using get_spectral_bands()
 spectrum = example.get_spectral_bands(155.)
 # output the resulting spectrum
 print(spectrum['euv_flux_spectra'])
@@ -92,7 +92,7 @@ Coordinates:
 If you need to calculate the spectrum for several F<sub>10.7</sub> values, pass them using a list:
 
 ```
-# calculate the spectrum values at F10.7 = 155 s.f.u. and F10.7 = 200 s.f.u. using get_spectral_bands()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. and F10.7 = 200.0 s.f.u. using get_spectral_bands()
 spectra = example.get_spectral_bands([155., 200.])
 # output the resulting spectra
 print(spectra['euv_flux_spectra'])
@@ -112,7 +112,6 @@ Coordinates:
 2. get_spectra()
 This method is used to unify the use of the pyspammodel package classes. get_spectra() internally calls the 
 get_spectral_bands() method with the parameters passed to get_spectra().
-
 
 ### AeroSpam
 
@@ -173,7 +172,7 @@ Below is an example of working with the AeroSpam class:
 import pyspammodel as spam
 # creating an instance of the AeroSpam class
 example = spam.AeroSpam()
-# calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectral_bands()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. using get_spectral_bands()
 spectrum = example.get_spectral_bands(155.)
 # output the resulting spectrum
 print(spectrum['euv_flux_spectra'])
@@ -193,7 +192,7 @@ Coordinates:
 If you need to calculate the spectrum for several F<sub>10.7</sub> values, pass them using a list:
 
 ```
-# calculate the spectrum values at F10.7 = 155 s.f.u. and F10.7 = 200 s.f.u. using get_spectral_bands()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. and F10.7 = 200.0 s.f.u. using get_spectral_bands()
 spectra = example.get_spectral_bands([155., 200.])
 # output the resulting spectra
 print(spectra['euv_flux_spectra'])
@@ -212,22 +211,23 @@ Coordinates:
 
 2. get_spectral_lines()
 ```
-# importing a package with the alias p
-import pyspammodel as p
+# importing a package with the alias spam
+import pyspammodel as spam
 # creating an instance of the AeroSpam class
 example = spam.AeroSpam()
-# calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectral_lines()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. using get_spectral_lines()
 spectrum = example.get_spectral_lines(155.)
 # output the resulting spectrum
 print(spectrum['euv_flux_spectra'])
 
 
 <xarray.DataArray 'euv_flux_spectra' (lambda: 17, F107: 1)> Size: 136B
-array([[2.34873663e+15],
-       [2.72154623e+15],
+array([[9.33579829e+12],
+       [1.23749924e+13],
+       [9.23118140e+13],
 ...
-       [1.24545242e+16],
-       [9.48119446e+17]])
+       [6.54897084e+13],
+       [5.44081490e+15]])
 Coordinates:
   * lambda   (lambda) float64 136B 25.6 28.4 30.3 36.8 ... 102.6 103.2 121.6
   * F107     (F107) float64 8B 155.0
@@ -236,18 +236,19 @@ Coordinates:
 If you need to calculate the spectrum for several Na values, pass them using a list:
 
 ```
-# calculate the spectrum values at F10.7 = 155 s.f.u. and F10.7 = 200 s.f.u. using get_spectral_lines()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. and F10.7 = 200.0 s.f.u. using get_spectral_lines()
 spectra = example.get_spectral_lines([155., 200.])
 # output the resulting spectra
 print(spectra['euv_flux_spectra'])
 
 
 <xarray.DataArray 'euv_flux_spectra' (lambda: 17, F107: 2)> Size: 272B
-array([[2.34873663e+15, 4.33271389e+15],
-       [2.72154623e+15, 4.83634865e+15],
+array([[9.33579829e+12, 1.19780897e+13],
+       [1.23749924e+13, 1.55517822e+13],
+       [9.23118140e+13, 1.03186884e+14],
 ...
-       [1.24545242e+16, 1.94326255e+16],
-       [9.48119446e+17, 1.42630744e+18]])
+       [6.54897084e+13, 7.24188015e+13],
+       [5.44081490e+15, 6.00590180e+15]])
 Coordinates:
   * lambda   (lambda) float64 136B 25.6 28.4 30.3 36.8 ... 102.6 103.2 121.6
   * F107     (F107) float64 16B 155.0 200.0
@@ -262,11 +263,11 @@ the second is a dataset from the get_spectral_lines() method. get_spectra() can 
 several values of F<sub>10.7</sub>.
 
 ```
-# importing a package with the alias p
-import pyspammodel as p
+# importing a package with the alias spam
+import pyspammodel as spam
 # creating an instance of the AeroSpam class
 example = spam.AeroSpam()
-# calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectra()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. using get_spectra()
 spectrum = example.get_spectra(155.)
 # output the resulting spectrum
 print(spectrum)
@@ -282,23 +283,22 @@ Data variables:
     euv_flux_spectra  (band_center, F107) float64 160B 3.372e+11 ... 2.759e+13
     lband             (band_number) float64 160B 5.0 10.0 15.0 ... 95.0 100.0
     uband             (band_number) float64 160B 10.0 15.0 20.0 ... 100.0 105.0
-    center            (band_number) float64 160B 7.5 12.5 17.5 ... 97.5 102.5
-    
-<xarray.Dataset> Size: 484B
+    center            (band_number) float64 160B 7.5 12.5 17.5 ... 97.5 102.5, <xarray.Dataset> Size: 484B
+
 Dimensions:           (lambda: 17, F107: 1, line_number: 17)
 Coordinates:
   * line_number       (line_number) int32 68B 0 1 2 3 4 5 ... 11 12 13 14 15 16
   * lambda            (lambda) float64 136B 25.6 28.4 30.3 ... 102.6 103.2 121.6
   * F107              (F107) float64 8B 155.0
 Data variables:
-    euv_flux_spectra  (lambda, F107) float64 136B 2.349e+15 ... 9.481e+17
+    euv_flux_spectra  (lambda, F107) float64 136B 9.336e+12 ... 5.441e+15
     line_lambda       (line_number) float64 136B 25.6 28.4 30.3 ... 103.2 121.6)
 ```
 
 Use tuple indexing using square brackets [] to get a specific dataset:
 
 ```
-# calculate the spectrum values at F10.7 = 155 s.f.u. using get_spectra()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. using get_spectra()
 spectrum = example.get_spectra(155.)
 # getting a dataset for the spectrum in the wavelength intervals
 print(spectrum[0])
@@ -317,6 +317,35 @@ Data variables:
     center            (band_number) float64 160B 7.5 12.5 17.5 ... 97.5 102.5
 ```
 
+4. predict()
 
+This method calculates EUV spectrum from mixed dataset (containing intervals and lines together).
+
+```
+# importing a package with the alias spam
+import pyspammodel as spam
+# creating an instance of the AeroSpam class
+example = spam.AeroSpam()
+# calculate the spectrum values at F10.7 = 155.0 s.f.u. using predict()
+spectrum = example.predict(155.)
+# output the resulting spectrum
+print(spectrum['euv_flux_spectra'])
+
+
+<xarray.DataArray 'euv_flux_spectra' (band_center: 37, F107: 1)> Size: 296B
+array([[3.37198588e+11],
+       [9.52514320e+12],
+       [9.32119976e+13],
+...
+       [6.54897084e+13],
+       [2.75864363e+13],
+       [5.44081490e+15]])
+Coordinates:
+  * band_center  (band_center) float64 296B 7.5 12.5 17.5 ... 103.2 102.5 121.6
+  * F107         (F107) float64 8B 155.0
+```
+
+Just like the get_spectral_bands() and get_spectral_lines() methods, the predict() method supports passing the 
+F<sub>10.7</sub> parameter as a list.
 
 
