@@ -4,17 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyspammodel"
-version = "0.0.3b"
+version = "0.0.4b"
 authors = [
   { name="Anton Tatarnikov", email="tatarnikoffanton@yandex.ru" },
   { name="Oleg Zolotov", email="ovz.office@gmail.com" },
 ]
-description = "Python3 implementation of model SPAM - model of solar X-ray, extreme ultraviolet and far ultraviolet radiation flux at the top of the Earth’s atmosphere of the ultraviolet radiation spectrum of the Sun"
+description = ""
 
 readme = "README.md"
 license = {file = "LICENSE"}
 
-keywords = ["Solar radiation model", "EUV", "FUV", "XUV"]
+keywords = []
 
 requires-python = ">=3.7"
 classifiers = [
