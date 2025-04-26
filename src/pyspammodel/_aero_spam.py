@@ -70,7 +70,12 @@ class AeroSpam:
                                      'center': ('band_number', self._bands_dataset['center'].values)},
                           coords={'band_center': self._bands_dataset['center'].values,
                                   'F107': F107[:, 1],
-                                  'band_number': np.arange(20)})
+                                  'band_number': np.arange(20)},
+                          attrs={'euv_flux_spectra' : 'modeled EUV photon flux in units of [m^-2 * s^-1 * nm^-1]',
+                                 'lband': 'lower boundary of wavelength interval in units of [nm]',
+                                 'uband' : 'upper boundary of wavelength interval in units of [nm]',
+                                 'center' : 'center of wavelength interval in units of [nm]'
+                                 })
 
     def get_spectra(self, f107):
         '''
