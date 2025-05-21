@@ -40,9 +40,10 @@ class SolarSpam:
         f107 = self._get_f107(f107)
         res = self._predict(self._coeffs, f107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
-                                     'line_lambda': ('band_number', self._dataset['lambda'].values)},
-                          coords={'band_center': self._dataset['lambda'].values,
-                                  'F107': f107[:, 1],
+                                     'lband': ('band_number', np.arange(0, 190)),
+                                     'uband': ('band_number', np.arange(1, 191))},
+                          coords={'F107': f107[:, 1],
+                                  'band_center': self._dataset['lambda'].values,
                                   'band_number': np.arange(190)})
 
     def get_spectra(self, f107):

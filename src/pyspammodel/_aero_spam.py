@@ -49,11 +49,11 @@ class AeroSpam:
 
         F107 = self._get_f107(f107)
         res = self._predict(self._lines_coeffs, F107.T)
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('lambda', 'F107'), res),
-                                     'line_lambda': ('line_number', self._lines_dataset['lambda'].values)},
-                          coords={'line_number': np.arange(17),
-                                  'lambda': self._lines_dataset['lambda'].values,
-                                  'F107': F107[:, 1]})
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('line_wavelength', 'F107'), res),
+                                     'wavelength': ('line_number', self._lines_dataset['lambda'].values)},
+                          coords={'F107': F107[:, 1],
+                                  'line_wavelength': self._lines_dataset['lambda'].values,
+                                  'line_number': np.arange(17)})
 
     def get_spectral_bands(self, f107):
         '''
@@ -66,16 +66,10 @@ class AeroSpam:
         res = self._predict(self._bands_coeffs, F107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
                                      'lband': ('band_number', self._bands_dataset['lband'].values),
-                                     'uband': ('band_number', self._bands_dataset['uband'].values),
-                                     'center': ('band_number', self._bands_dataset['center'].values)},
-                          coords={'band_center': self._bands_dataset['center'].values,
-                                  'F107': F107[:, 1],
-                                  'band_number': np.arange(20)},
-                          attrs={'euv_flux_spectra' : 'modeled EUV photon flux in units of [m^-2 * s^-1 * nm^-1]',
-                                 'lband': 'lower boundary of wavelength interval in units of [nm]',
-                                 'uband' : 'upper boundary of wavelength interval in units of [nm]',
-                                 'center' : 'center of wavelength interval in units of [nm]'
-                                 })
+                                     'uband': ('band_number', self._bands_dataset['uband'].values)},
+                          coords={'F107': F107[:, 1],
+                                  'band_center': self._bands_dataset['center'].values,
+                                  'band_number': np.arange(20)})
 
     def get_spectra(self, f107):
         '''
@@ -98,8 +92,7 @@ class AeroSpam:
         res = self._predict(self._full_coeffs, F107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
                                      'lband': ('band_number', self._full_dataset['lband'].values),
-                                     'uband': ('band_number', self._full_dataset['uband'].values),
-                                     'center': ('band_number', self._full_dataset['center'].values)},
-                          coords={'band_center': self._full_dataset['center'].values,
-                                  'F107': F107[:, 1],
+                                     'uband': ('band_number', self._full_dataset['uband'].values)},
+                          coords={'F107': F107[:, 1],
+                                  'band_center': self._full_dataset['center'].values,
                                   'band_number': np.arange(37)})
