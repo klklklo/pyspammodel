@@ -53,7 +53,12 @@ class AeroSpam:
                                      'wavelength': ('line_number', self._lines_dataset['lambda'].values)},
                           coords={'F107': F107[:, 1],
                                   'line_wavelength': self._lines_dataset['lambda'].values,
-                                  'line_number': np.arange(17)})
+                                  'line_number': np.arange(17)},
+                          attrs={'F10.7 units': '10^-22 · W · m^-2 · Hz^-1',
+                                 'spectra units': 'W · m^-2 · nm^-1',
+                                 'wavelength units': 'nm',
+                                 'euv_flux_spectra': 'modeled EUV solar irradiance',
+                                 'wavelength': 'the wavelength of a discrete line'})
 
     def get_spectral_bands(self, f107):
         '''
@@ -69,7 +74,13 @@ class AeroSpam:
                                      'uband': ('band_number', self._bands_dataset['uband'].values)},
                           coords={'F107': F107[:, 1],
                                   'band_center': self._bands_dataset['center'].values,
-                                  'band_number': np.arange(20)})
+                                  'band_number': np.arange(20)},
+                          attrs={'F10.7 units': '10^-22 · W · m^-2 · Hz^-1',
+                                 'spectra units': 'W · m^-2 · nm^-1',
+                                 'wavelength units': 'nm',
+                                 'euv_flux_spectra': 'modeled EUV solar irradiance',
+                                 'lband': 'lower boundary of wavelength interval',
+                                 'uband': 'upper boundary of wavelength interval'})
 
     def get_spectra(self, f107):
         '''

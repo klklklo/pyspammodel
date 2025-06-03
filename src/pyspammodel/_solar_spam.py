@@ -44,7 +44,13 @@ class SolarSpam:
                                      'uband': ('band_number', np.arange(1, 191))},
                           coords={'F107': f107[:, 1],
                                   'band_center': self._dataset['lambda'].values,
-                                  'band_number': np.arange(190)})
+                                  'band_number': np.arange(190)},
+                          attrs={'F10.7 units': '10^-22 · W · m^-2 · Hz^-1',
+                                 'spectra units': 'W · m^-2 · nm^-1',
+                                 'wavelength units': 'nm',
+                                 'euv_flux_spectra': 'modeled EUV solar irradiance',
+                                 'lband': 'lower boundary of wavelength interval',
+                                 'uband': 'upper boundary of wavelength interval'})
 
     def get_spectra(self, f107):
         '''
