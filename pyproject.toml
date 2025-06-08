@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyspammodel"
-version = "0.0.6b"
+version = "0.0.9b"
 authors = [
   { name="Anton Tatarnikov", email="tatarnikoffanton@yandex.ru" },
   { name="Oleg Zolotov", email="ovz.office@gmail.com" },
@@ -12,7 +12,8 @@ authors = [
 description = ""
 
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "Apache-2.0"
+license-files = ["LICENSE.txt"]
 
 keywords = []
 
@@ -20,10 +21,6 @@ requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering :: Physics"

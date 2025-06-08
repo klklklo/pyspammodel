@@ -22,14 +22,17 @@ class AeroSpam:
                                         np.array(self._lines_dataset['P2'], dtype=np.float64),
                                         np.array(self._lines_dataset['P3'], dtype=np.float64))).transpose()
 
-    def _get_f107(self, f107):
-        '''
-        Method for creating the daily F10.7 index matrix that will be used to calculate the spectrum.
-        Returns a matrix with rows [F10.7 ^ 2; F10.7; 1] for each passed value F10.7.
-        :param f107: single value of the daily index F10.7 or an array of such values.
-        :return: numpy array for model calculation.
-        '''
+    def _check_types(self, f107):
+        if isinstance(f107, (float, int, np.integer, list, np.ndarray)):
+            if isinstance(f107, (list, np.ndarray)):
+                if not all([isinstance(x, (float, int, np.integer,)) for x in f107]):
+                    raise TypeError(
+                        f'Only float and int types are allowed in array.')
+        else:
+            raise TypeError(f'Only float, int, list and np.ndarray types are allowed. f107 was {type(f107)}')
+        return True
 
+    def _get_f107(self, f107):
         try:
             if isinstance(f107, float) or isinstance(f107, int):
                 return np.array([f107 ** 2, f107, 1], dtype=np.float64).reshape(1, 3)
@@ -41,13 +44,9 @@ class AeroSpam:
         return np.dot(matrix_a, vector_x)
 
     def get_spectral_lines(self, f107):
-        '''
-        A method for calculating the spectrum for 17 individual lines from the range of 5-105 nm.
-        :param f107: single value of the daily index F10.7 or an array of such values.
-        :return: xarray Dataset [euv_flux_spectra, line_lambda].
-        '''
+        if self._check_types(f107):
+            F107 = self._get_f107(f107)
 
-        F107 = self._get_f107(f107)
         res = self._predict(self._lines_coeffs, F107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('line_wavelength', 'F107'), res),
                                      'wavelength': ('line_number', self._lines_dataset['lambda'].values)},
@@ -61,13 +60,9 @@ class AeroSpam:
                                  'wavelength': 'the wavelength of a discrete line'})
 
     def get_spectral_bands(self, f107):
-        '''
-        A method for calculating the spectrum for 20 wave bands with a length of 5 nm from the range of 5-105 nm.
-        :param f107: single value of the daily index F10.7 or an array of such values.
-        :return: xarray Dataset [euv_flux_spectra, lband, uband, center].
-        '''
+        if self._check_types(f107):
+            F107 = self._get_f107(f107)
 
-        F107 = self._get_f107(f107)
         res = self._predict(self._bands_coeffs, F107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
                                      'lband': ('band_number', self._bands_dataset['lband'].values),
@@ -83,27 +78,22 @@ class AeroSpam:
                                  'uband': 'upper boundary of wavelength interval'})
 
     def get_spectra(self, f107):
-        '''
-        A method for calculating the spectrum for 37 specific wavelength intervals:
-        20 wave bands and 17 separate lines. Combines get_spectral_bands() and get_spectral_lines() methods.
-        :param f107: single value of the daily index F10.7 or an array of such values.
-        :return: xarray Dataset [euv_flux_spectra, line_lambda],
-        xarray Dataset [euv_flux_spectra, lband, uband, center].
-        '''
         return self.get_spectral_bands(f107), self.get_spectral_lines(f107)
 
     def predict(self, f107):
-        '''
-        A method for calculating the spectrum for 20 wave bands with a length of 5 nm from the range of 5-105 nm.
-        :param f107: single value of the daily index F10.7 or an array of such values.
-        :return: xarray Dataset [euv_flux_spectra, lband, uband, center].
-        '''
+        if self._check_types(f107):
+            F107 = self._get_f107(f107)
 
-        F107 = self._get_f107(f107)
         res = self._predict(self._full_coeffs, F107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
                                      'lband': ('band_number', self._full_dataset['lband'].values),
                                      'uband': ('band_number', self._full_dataset['uband'].values)},
                           coords={'F107': F107[:, 1],
                                   'band_center': self._full_dataset['center'].values,
-                                  'band_number': np.arange(37)})
+                                  'band_number': np.arange(37)},
+                          attrs={'F10.7 units': '10^-22 · W · m^-2 · Hz^-1',
+                                 'spectra units': 'W · m^-2 · nm^-1',
+                                 'wavelength units': 'nm',
+                                 'euv_flux_spectra': 'modeled EUV solar irradiance',
+                                 'lband': 'lower boundary of wavelength interval',
+                                 'uband': 'upper boundary of wavelength interval'})

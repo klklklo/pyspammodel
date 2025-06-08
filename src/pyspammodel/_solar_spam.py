@@ -14,12 +14,6 @@ class SolarSpam:
                                   np.array(self._dataset['P3'], dtype=np.float64))).transpose()
 
     def _get_f107(self, f107):
-        '''
-        Method for creating the daily F10.7 index matrix that will be used to calculate the spectrum.
-        Returns a matrix with rows [F10.7 ^ 2; F10.7; 1] for each passed value F10.7.
-        :param f107: single value of the daily index F10.7 or an array of such values.
-        :return: numpy array for model calculation.
-        '''
         try:
             if isinstance(f107, float) or isinstance(f107, int):
                 return np.array([f107 ** 2, f107, 1], dtype=np.float64).reshape(1, 3)
@@ -27,22 +21,28 @@ class SolarSpam:
         except TypeError:
             raise TypeError('Only int, float or array-like object types are allowed')
 
+    def _check_types(self, f107):
+        if isinstance(f107, (float, int, np.integer, list, np.ndarray)):
+            if isinstance(f107, (list, np.ndarray)):
+                if not all([isinstance(x, (float, int, np.integer,)) for x in f107]):
+                    raise TypeError(
+                        f'Only float and int types are allowed in array.')
+        else:
+            raise TypeError(f'Only float, int, list and np.ndarray types are allowed. f107 was {type(f107)}')
+        return True
+
     def _predict(self, matrix_a, vector_x):
         return np.dot(matrix_a, vector_x)
 
     def get_spectral_bands(self, f107):
-        '''
-        Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
-        of the spectrum of the interval 0-190 nm
-        :param f107: single value of the daily index F10.7 or an array of such values
-        :return: xarray Dataset [euv_flux_spectra, line_lambda]
-        '''
-        f107 = self._get_f107(f107)
-        res = self._predict(self._coeffs, f107.T)
+        if self._check_types(f107):
+            F107 = self._get_f107(f107)
+
+        res = self._predict(self._coeffs, F107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
                                      'lband': ('band_number', np.arange(0, 190)),
                                      'uband': ('band_number', np.arange(1, 191))},
-                          coords={'F107': f107[:, 1],
+                          coords={'F107': F107[:, 1],
                                   'band_center': self._dataset['lambda'].values,
                                   'band_number': np.arange(190)},
                           attrs={'F10.7 units': '10^-22 · W · m^-2 · Hz^-1',
@@ -53,9 +53,7 @@ class SolarSpam:
                                  'uband': 'upper boundary of wavelength interval'})
 
     def get_spectra(self, f107):
-        '''
-        Model calculation method. Used to unify the interface with AeroSpam class.
-        :param f107: single value of the daily index F10.7 or an array of such values.
-        :return: xarray Dataset [euv_flux_spectra, line_lambda]
-        '''
+        return self.get_spectral_bands(f107)
+
+    def predict(self, f107):
         return self.get_spectral_bands(f107)
