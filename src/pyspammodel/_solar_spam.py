@@ -32,7 +32,12 @@ class SolarSpam:
         return True
 
     def _predict(self, matrix_a, vector_x):
-        return np.dot(matrix_a, vector_x)
+        h = 6.62607015e-34
+        c = 299792458
+        l = np.array(np.arange(0.5, 190.5, 1) * 1e-9).reshape((190,1))
+
+        res = np.dot(matrix_a, vector_x) / (h*c / l)
+        return res
 
     def get_spectral_bands(self, f107):
         if self._check_types(f107):
