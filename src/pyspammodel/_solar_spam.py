@@ -9,9 +9,6 @@ class SolarSpam:
     '''
     def __init__(self):
         self._dataset = _m.get_solar_spam_coeffs()
-        self._coeffs = np.vstack((np.array(self._dataset['P1'], dtype=np.float64),
-                                  np.array(self._dataset['P2'], dtype=np.float64),
-                                  np.array(self._dataset['P3'], dtype=np.float64))).transpose()
 
     def _get_f107(self, f107):
         try:
@@ -43,18 +40,22 @@ class SolarSpam:
         if self._check_types(f107):
             F107 = self._get_f107(f107)
 
-        res = self._predict(self._coeffs, F107.T)
+        coeffs = np.vstack((np.array(self._dataset['P1'], dtype=np.float64),
+                            np.array(self._dataset['P2'], dtype=np.float64),
+                            np.array(self._dataset['P3'], dtype=np.float64))).T
+
+        res = self._predict(coeffs, F107.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'F107'), res),
-                                     'lband': ('band_number', np.arange(0, 190)),
-                                     'uband': ('band_number', np.arange(1, 191))},
+                                     'lband': ('band_number', self._dataset['lband'].data),
+                                     'uband': ('band_number', self._dataset['uband'].data)},
                           coords={'F107': F107[:, 1],
-                                  'band_center': self._dataset['lambda'].values,
+                                  'band_center': self._dataset['center'].data,
                                   'band_number': np.arange(190)},
-                          attrs={'model_name': 'Solar-SPAM',
+                          attrs={'model name': 'Solar-SPAM',
                                  'F10.7 units': '10^-22 · W · m^-2 · Hz^-1',
-                                 'spectra units': 'W · m^-2 · nm^-1',
+                                 'spectra units': 'm^-2 · s^-1 · nm^-1',
                                  'wavelength units': 'nm',
-                                 'euv_flux_spectra': 'modeled EUV solar irradiance',
+                                 'euv_flux_spectra': 'modeled EUV solar photon flux spectra',
                                  'lband': 'lower boundary of wavelength interval',
                                  'uband': 'upper boundary of wavelength interval'})
 
